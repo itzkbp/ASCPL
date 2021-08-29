@@ -1,0 +1,3 @@
+main = (argc : int, argv : Array<string>) => {
+    return (0);
+}
