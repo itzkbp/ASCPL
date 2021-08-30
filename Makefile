@@ -10,7 +10,7 @@ $(exec) : $(objects)
 	gcc -c $(flags) $< -o $@
 
 run:
-	-./bin/a.out ./examples/ex-1.kol
+	-./bin/a.out ./examples/ex-1.asc
 
 clean:
 	-rm src/*.o
