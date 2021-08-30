@@ -1,4 +1,4 @@
-exec    = ./bin/a.out
+exec    = ./bin/asc.out
 sources = $(wildcard src/*.c)
 objects = $(sources:.c=.o)
 flags   = -g -Wall -lm -ldl -fPIC -rdynamic
@@ -10,9 +10,15 @@ $(exec) : $(objects)
 	gcc -c $(flags) $< -o $@
 
 run:
-	-./bin/a.out ./examples/ex-1.asc
+	-$(exec) ./examples/ex-1.asc
 
 clean:
 	-rm src/*.o
-	-rm ./bin/*.out
+	-rm ./bin/*
 	-clear
+
+asc:
+	-as --32 ./bin/out.s -o ./bin/out.o
+	-ld ./bin/out.o -o ./bin/test -m elf_i386
+	-./bin/test
+	-echo $$?
