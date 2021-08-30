@@ -43,3 +43,13 @@ char *asc_read_file(const char* fileName)
     
     return buffer;
 }
+
+void asc_write_file(const char* fileName, char *outString)
+{
+    FILE *fp = tryOpening(fileName, "w");
+
+    if((fputs(outString, fp)) == 0)
+        perror("ERROR writing ASSEMBLY :"), exit(1);
+    
+    fclose(fp);
+}
