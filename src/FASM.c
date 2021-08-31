@@ -26,7 +26,9 @@ char *fasm_assignment(AST *ast)
     if(ast->value->type == AST_FUNCTION)
     {
         const char *template = ".globl %s\n"
-                               "%s:\n";
+                               "%s:\n"
+                               "pushl %%esp\n"
+                               "movl %%esp, %%ebp\n";
         s = realloc(s, (strlen(template)+ (strlen(ast->name)*2) +1) * sizeof(char));
         sprintf(s, template, ast->name, ast->name);
 
@@ -53,7 +55,9 @@ char *fasm_call(AST *ast)
     {
         AST *first_arg = (AST *) ast->value->children->size ? ast->value->children->items[0] : (void *) 0;
 
-        const char *template = "movl $%d, %%eax\n"
+        const char *template = "movl %%ebp, %%esp\n"
+                               "popl %%ebp\n\n"
+                               "movl $%d, %%eax\n"
                                "ret\n";
 
         char *ret_str = calloc(strlen(template) + 1, sizeof(char));
@@ -76,9 +80,11 @@ char *fasm_root(AST *ast)
     const char *section_text = ".section .text\n"
                                ".globl _start\n"
                                "_start:\n"
+                               "push 0(\%esp)\n"
                                "call main\n"
-                               "movl %eax, %ebx\n"
-                               "movl $1, %eax\n"
+                               "addl $4, \%esp\n"             //adding 4 to esp, makes (esp) go back to its size
+                               "movl \%eax, \%ebx\n"
+                               "movl $1, \%eax\n"
                                "int $0x80\n\n";
 
     char *value = (char *) calloc((strlen(section_text) + 1), sizeof(char));
