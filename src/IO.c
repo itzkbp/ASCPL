@@ -10,9 +10,9 @@ FILE *tryOpening(const char *fileName, char *fileMode)
 
     if( fp == NULL)
     {
-        printf("Cannot open file '%s'",fileName);
+        printf("\n\n\tCannot open file '%s'",fileName);
         perror("Error :");
-        printf("\nExiting...\n");
+        printf("\n\n\tExiting...\n\n");
         exit(1);
     }
 
