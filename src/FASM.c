@@ -80,7 +80,7 @@ char *fasm_root(AST *ast)
     const char *section_text = ".section .text\n"
                                ".globl _start\n"
                                "_start:\n"
-                               "push 0(\%esp)\n"
+                               "pushl 0(\%esp)\n"
                                "call main\n"
                                "addl $4, \%esp\n"             //adding 4 to esp, makes (esp) go back to its size
                                "movl \%eax, \%ebx\n"
