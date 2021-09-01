@@ -13,6 +13,7 @@
             AST_VARIABLE,
             AST_STATEMENT,
             AST_CALL,
+            AST_ACCESS,
             AST_ASSIGNMENT,
             AST_NO_OPERATION,
         } type;

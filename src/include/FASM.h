@@ -3,12 +3,13 @@
 
     #include "AST.h"
 
-    char *fasm_compound  (AST *ast);
-    char *fasm_assignment(AST *ast);
-    char *fasm_call      (AST *ast);
-    char *fasm_variable  (AST *ast);
-    char *fasm_int       (AST *ast);
-    char *fasm           (AST *ast);
-    char *fasm_root      (AST *ast);
+    char *fasm_compound  (AST *ast, List *list);
+    char *fasm_assignment(AST *ast, List *list);
+    char *fasm_call      (AST *ast, List *list);
+    char *fasm_variable  (AST *ast, List *list, int id);
+    char *fasm_int       (AST *ast, List *list);
+    char *fasm_access    (AST *ast, List *list);
+    char *fasm           (AST *ast, List *list);
+    char *fasm_root      (AST *ast, List *list);
 
 #endif
