@@ -3,6 +3,8 @@
 
     #include "List.h"
 
+    struct st_Optimizer;
+
     typedef struct st_AST
     {
         enum en_AST {
@@ -23,6 +25,10 @@
         int intValue;
         List *children;
         char *name;
+
+        struct st_AST *(*fptr)(struct st_Optimizer *optimizer, struct st_AST *node, List *list);
+        // struct st_AST *(st_AST::*fptr) ...
+        
     } AST;
 
     AST *init_ast       (int type);
