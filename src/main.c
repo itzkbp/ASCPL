@@ -1,7 +1,6 @@
 #include "include/ASC.h"
 
 #include "include/Stdio.h"
-#include "include/Stdlib.h"
 #include "include/String.h"
 
 int main(int argc, char *argv[])
@@ -15,7 +14,6 @@ int main(int argc, char *argv[])
 
         return 1;
     }
-    system("mkdir bin");
     asc_compile_file(argv[1], argc > 2 && (strcmp(argv[2], "--assembly") == 0) ? 1 : 0);
     return 0;
 }

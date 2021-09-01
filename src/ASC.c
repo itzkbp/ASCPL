@@ -17,20 +17,20 @@ void asc_compile(char *src, int assembly)
     printf("\n\t###########################---------------------------------------------------------\n");
     printf(  "\t##  Generating Assembly  ## -> Wondering how COMPUTERS work? -> ASSEMBLY, maybe.   |");
     printf("\n\t###########################---------------------------------------------------------");
-    printf("\n\tWOW! You got the ASSEMBLY equivalent of your .asc file right inside bin, take a look.\n");
+    printf("\n\tWOW! You got the ASSEMBLY equivalent of your .asc file right in here, take a look.\n");
 
-    asc_write_file("./bin/out.s",fasm_root(root));
+    asc_write_file("./out.s", fasm_root(root, init_list(sizeof(AST *))) );
 
-    system("as --32 ./bin/out.s -o ./bin/out.o");
-    system("ld ./bin/out.o -o ./bin/output -m elf_i386");
+    system("as --32 ./out.s -o ./out.o");
+    system("ld ./out.o -o ./output -m elf_i386");
 
-    printf("\n\n\t Output File :: ./bin/output\n\n");
+    printf("\n\n\t Output File :: ./output\n\n");
 
-    system("rm ./bin/out.o");
+    system("rm ./out.o");
 
     if(!assembly)
     {
-        system("rm ./bin/out.s");
+        system("rm ./out.s");
         printf("\n\t#########################----------------------------------------------------------\n");
         printf(  "\t##  Removing Assembly  ## -> Use => [     --assembly    ] flag to prevent this.   |");
         printf("\n\t#########################----------------------------------------------------------\n\n");
