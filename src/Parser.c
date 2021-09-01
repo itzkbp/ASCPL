@@ -73,6 +73,11 @@ AST *parser_parse_id(Parser *parser)
             ast->type = AST_CALL;
             ast->value = parser_parse_list(parser);
         }
+        else if(parser->token->type == TK_LBRACKET)
+        {
+            ast->type = AST_ACCESS;
+            ast->value = parser_parse_list(parser);
+        }
     }
 
     return ast;
@@ -80,7 +85,9 @@ AST *parser_parse_id(Parser *parser)
 
 AST *parser_parse_list(Parser *parser)
 {
-    parser_eat(parser, TK_LPAREN);
+    unsigned int isBracket = (parser->token->type == TK_LBRACKET);
+
+    parser_eat(parser, (isBracket) ? TK_LBRACKET : TK_LPAREN);
 
     AST *compound = init_ast(AST_COMPOUND);
     list_push(compound->children, parser_parse_exp(parser));
@@ -91,7 +98,7 @@ AST *parser_parse_list(Parser *parser)
         list_push(compound->children, parser_parse_exp(parser));
     }
 
-    parser_eat(parser, TK_RPAREN);
+    parser_eat(parser, (isBracket) ? TK_RBRACKET : TK_RPAREN);
 
     if(parser->token->type == TK_COLON)
     {

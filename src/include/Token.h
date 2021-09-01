@@ -10,6 +10,8 @@
             TK_EQUALS,
             TK_LPAREN,
             TK_RPAREN,
+            TK_LBRACKET,
+            TK_RBRACKET,
             TK_COLON,
             TK_COMMA,
             TK_LT,

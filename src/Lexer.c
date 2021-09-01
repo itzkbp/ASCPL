@@ -106,6 +106,8 @@ Token *lexer_next_token(Lexer *lexer)
 
             case '(': return lexer_advance_current(lexer, TK_LPAREN);
             case ')': return lexer_advance_current(lexer, TK_RPAREN);
+            case '[': return lexer_advance_current(lexer, TK_LBRACKET);
+            case ']': return lexer_advance_current(lexer, TK_RBRACKET);
             case ':': return lexer_advance_current(lexer, TK_COLON);
             case ',': return lexer_advance_current(lexer, TK_COMMA);
             case '<': return lexer_advance_current(lexer, TK_LT);
@@ -117,7 +119,7 @@ Token *lexer_next_token(Lexer *lexer)
             case '\0': break;
 
             default: {
-                printf("[LEXER] :: Undentified Token '%c'",lexer->c);
+                printf("[LEXER] :: Undentified Token '%c'\n",lexer->c);
                 exit(1);
             }
         }
