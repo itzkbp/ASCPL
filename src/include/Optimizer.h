@@ -3,7 +3,6 @@
 
     typedef struct st_Optimizer
     {
-        int a;
     } Optimizer;
 
 #endif
