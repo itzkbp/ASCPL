@@ -10,8 +10,6 @@
 
     } Optimizer;
 
-    static AST *fptr_print(Optimizer *optimizer, AST *node, List *list);
-
     Optimizer *init_opimizer();
 
     static AST *var_lookup(List *list, const char *name);
