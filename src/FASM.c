@@ -119,7 +119,12 @@ char *fasm_call(AST *ast, List *list)
 
 char *fasm_int(AST *ast, List *list)
 {
-    return " int ";
+    const char *template = "$%d";
+    char *s = (char *) calloc(strlen(template) + 128, sizeof(char));
+
+    sprintf(s, template, ast->intValue);
+    
+    return s;
 }
 
 char *fasm_access(AST *ast, List *list)
