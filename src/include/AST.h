@@ -17,12 +17,14 @@
             AST_CALL,
             AST_ACCESS,
             AST_ASSIGNMENT,
+            AST_STRING,
             AST_NO_OPERATION,
         } type;
 
         struct st_AST *value;
         int dataType;
         int intValue;
+        char *stringValue;
         List *children;
         char *name;
 
