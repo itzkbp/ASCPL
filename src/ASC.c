@@ -3,6 +3,7 @@
 #include "include/Token.h"
 #include "include/Parser.h"
 #include "include/IO.h"
+#include "include/Optimizer.h"
 #include "include/FASM.h"
 
 #include "include/Stdio.h"
@@ -14,12 +15,15 @@ void asc_compile(char *src, int assembly)
     Parser *parser = init_parser(lexer);
     AST *root = parser_parse(parser);
 
+    Optimizer *optimizer = init_opimizer();
+    AST *optimized_root  = optimizer_optimize(optimizer, root, init_list(sizeof(AST *)));
+
     printf("\n\t###########################---------------------------------------------------------\n");
     printf(  "\t##  Generating Assembly  ## -> Wondering how COMPUTERS work? -> ASSEMBLY, maybe.   |");
     printf("\n\t###########################---------------------------------------------------------");
     printf("\n\tWOW! You got the ASSEMBLY equivalent of your .asc file right in here, take a look.\n\n");
     
-    asc_write_file("./out.s", fasm_root(root, init_list(sizeof(AST *))) );
+    asc_write_file("./out.s", fasm_root(optimized_root, init_list(sizeof(AST *))) );
     system("as --32 ./out.s -o ./out.o");
     system("ld ./out.o -o ./output -m elf_i386");
 
