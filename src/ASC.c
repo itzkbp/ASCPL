@@ -15,7 +15,7 @@ void asc_compile(char *src, int assembly)
     Parser *parser = init_parser(lexer);
     AST *root = parser_parse(parser);
 
-    Optimizer *optimizer = init_opimizer();
+    Optimizer *optimizer = init_optimizer();
     AST *optimized_root  = optimizer_optimize(optimizer, root, init_list(sizeof(AST *)));
 
     printf("\n\t###########################---------------------------------------------------------\n");
