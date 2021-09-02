@@ -1,6 +1,10 @@
 exec:
 	-gcc src/*.c -o asm
 
+clean:
+	-rm output out.s asc
+	-exit
+
 run-ex-1:
 	-./asc ./examples/ex-1.asc --assembly
 
