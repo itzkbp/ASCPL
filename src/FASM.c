@@ -24,7 +24,7 @@ char *fasm_compound(AST *ast, List *list)
 {
     char *value = (char *) calloc(1, sizeof(char));
 
-    for(int i = 0; (int)i < ast->children->size; i++)
+    for(uint i = 0; i < ast->children->size; i++)
     {
         AST *child_ast = (AST *) ast->children->items[i];
         char *next_value = fasm(child_ast, list);
@@ -50,7 +50,7 @@ char *fasm_assignment(AST *ast, List *list)
 
         AST *child_ast = ast->value;
 
-        for(unsigned int i = 0; i < child_ast->children->size; i++)
+        for(uint i = 0; i < child_ast->children->size; i++)
         {
             AST *farg = (AST *) child_ast->children->items[i];
             AST *arg_variable = init_ast(AST_VARIABLE);
