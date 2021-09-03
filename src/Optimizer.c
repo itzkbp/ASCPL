@@ -1,10 +1,24 @@
 #include "include/Optimizer.h"
+#include "include/Lookup.h"
 
+#include "include/String.h"
 #include "include/Stdlib.h"
+
+static AST *fptr_print(Optimizer *optimizer, AST *node, List *list)
+{
+    return node;
+}
 
 Optimizer *init_optimizer()
 {
     Optimizer *optimizer = (Optimizer *) calloc(1, sizeof(Optimizer));
+    optimizer->object    = init_ast(AST_COMPOUND);
+
+    AST *fptr_print_var  = init_ast(AST_VARIABLE);
+    fptr_print_var->name = mkstr("print");
+    fptr_print_var->fptr = fptr_print;
+
+    list_push(optimizer->object->children, fptr_print_var);
 
     return optimizer;
 }
@@ -33,16 +47,39 @@ AST *optimizer_optimize_assignment(Optimizer *optimizer, AST *node, List *list)
 
 AST *optimizer_optimize_call(Optimizer *optimizer, AST *node, List *list)
 {
+    if(strcmp(node->name, mkstr("return"))==0)
+        return node;
+    
+    AST *var = var_lookup(optimizer->object->children, node->name);
+    
+    if(var)
+    {
+        if(var->fptr)
+        {
+            return var->fptr(optimizer, var, node->value->children);
+        }
+    }
+
     return node;
 }
 
 AST *optimizer_optimize_variable(Optimizer *optimizer, AST *node, List *list)
 {
+    AST *var = var_lookup(optimizer->object->children, node->name);
+
+    if(var)
+        return var;
+
     return node;
 }
 
 AST *optimizer_optimize_function(Optimizer *optimizer, AST *node, List *list)
 {
+    AST *compound = init_ast(AST_COMPOUND);
+
+    for(uint i = 0; i < node->value->children->size; i++)
+        list_push(compound->children, optimizer_optimize(optimizer, (AST *) node->value->children->items[i], list));
+
     return node;
 }
 
