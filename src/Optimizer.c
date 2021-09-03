@@ -1,24 +1,17 @@
 #include "include/Optimizer.h"
 #include "include/Lookup.h"
+#include "include/BuiltIns.h"
 
 #include "include/String.h"
 #include "include/Stdlib.h"
 
-static AST *fptr_print(Optimizer *optimizer, AST *node, List *list)
-{
-    return node;
-}
 
 Optimizer *init_optimizer()
 {
     Optimizer *optimizer = (Optimizer *) calloc(1, sizeof(Optimizer));
     optimizer->object    = init_ast(AST_COMPOUND);
 
-    AST *fptr_print_var  = init_ast(AST_VARIABLE);
-    fptr_print_var->name = mkstr("print");
-    fptr_print_var->fptr = fptr_print;
-
-    list_push(optimizer->object->children, fptr_print_var);
+    init_builtins(optimizer->object->children);
 
     return optimizer;
 }
@@ -35,7 +28,7 @@ AST *optimizer_optimize_compound(Optimizer *optimizer, AST *node, List *list)
 
 AST *optimizer_optimize_assignment(Optimizer *optimizer, AST *node, List *list)
 {
-    AST *new_variable = init_ast(AST_ASSIGNMENT);
+    AST *new_variable   = init_ast(AST_ASSIGNMENT);
 
     new_variable->name  = node->name;
     new_variable->value = optimizer_optimize(optimizer, node->value, list);
