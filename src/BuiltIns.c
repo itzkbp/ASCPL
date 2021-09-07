@@ -5,7 +5,16 @@
 
 AST *fptr_print(Optimizer *optimizer, AST *node, List *list)
 {
-    return node;
+    AST *ast = init_ast(AST_STRING);
+    const char *template = "movl $4, \%eax\n"   //syscall write
+                           "movl $1, \%ebx\n"   //stdout
+                           "movl $0, \%ecx\n"   //buffer
+                           "movl $0, \%edx\n"   //size
+                           "int $0x80\n";
+
+    ast->stringValue = mkstr(template);
+
+    return ast;
 }
 
 void builtins_register_fptr(List *list,const char *name, AST *(*fptr)(Optimizer *optimizer, AST *node, List *list))
