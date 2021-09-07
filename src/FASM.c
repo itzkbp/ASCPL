@@ -30,7 +30,7 @@ char *fasm_assignment(AST *ast, List *list)
                                "%s:\n"
                                "pushl %%ebp\n"
                                "movl %%esp, %%ebp\n";
-        s = realloc(s, (strlen(template)+ (strlen(ast->name)*2) + 128) * sizeof(char));
+        s = realloc(s, (strlen(template)+ (strlen(ast->name)*2) + 256) * sizeof(char));
         sprintf(s, template, ast->name, ast->name);
 
         AST *child_ast = ast->value;
@@ -45,7 +45,7 @@ char *fasm_assignment(AST *ast, List *list)
         }
         
         char *child_ast_value = fasm(child_ast->value, list);
-        s = realloc(s, (strlen(s) + strlen(child_ast_value) + 128) * sizeof(char));
+        s = realloc(s, (strlen(s) + strlen(child_ast_value) + 256) * sizeof(char));
         strcat(s, child_ast_value);
     }
 
@@ -82,7 +82,7 @@ char *fasm_call(AST *ast, List *list)
         if(first_arg)
         {
             char *str_s = fasm(first_arg, list);
-            str = realloc(str, (strlen(str_s) + 1) *sizeof(str));
+            str = realloc(str, (strlen(str_s) + 8) *sizeof(str));
             strcpy(str,str_s);
             free(str_s);
         }
@@ -92,10 +92,10 @@ char *fasm_call(AST *ast, List *list)
                                "popl %%ebp\n\n"
                                "ret\n";
 
-        char *ret_str = calloc(strlen(template) + 128, sizeof(char));
+        char *ret_str = calloc(strlen(template) + 256, sizeof(char));
         sprintf(ret_str, template, str);
 
-        s = realloc(s, (strlen(s) + strlen(ret_str) + 128) *sizeof(char) );
+        s = realloc(s, (strlen(s) + strlen(ret_str) + 256) *sizeof(char) );
         strcat(s, ret_str);
     }
 
@@ -105,11 +105,16 @@ char *fasm_call(AST *ast, List *list)
 char *fasm_int(AST *ast, List *list)
 {
     const char *template = "$%d";
-    char *s = (char *) calloc(strlen(template) + 128, sizeof(char));
+    char *s = (char *) calloc(strlen(template) + 256, sizeof(char));
 
     sprintf(s, template, ast->intValue);
     
     return s;
+}
+
+char *fasm_string(AST *ast, List *list)
+{
+    return ast->stringValue;
 }
 
 char *fasm_access(AST *ast, List *list)
@@ -122,11 +127,10 @@ char *fasm_access(AST *ast, List *list)
     const char *template = "%s, %%eax\n"
                            "movl %d(%%eax)";
     
-    s = realloc(s, (strlen(template) + strlen(left_as) + 128) * sizeof(char));
+    s = realloc(s, (strlen(template) + strlen(left_as) + 256) * sizeof(char));
 
     sprintf(s, template, left_as, (first_arg ? first_arg->intValue : 0)*4);
 
-    printf("%s",s);
     return s;
 }
 
@@ -147,7 +151,7 @@ char *fasm_root(AST *ast, List *list)
     strcpy(value, section_text);
 
     char *next_value = fasm(ast, list);
-    value = realloc(value, (strlen(section_text) + strlen(next_value) + 512) *sizeof(char) );
+    value = realloc(value, (strlen(section_text) + strlen(next_value) + 1024) *sizeof(char) );
     strcat(value, next_value);
 
     return value;
@@ -160,12 +164,13 @@ char *fasm(AST *ast, List *list)
 
     switch(ast->type)
     {
-        case AST_COMPOUND:   next_value = fasm_compound(ast, list);    break;
+        case AST_COMPOUND:   next_value = fasm_compound  (ast, list);  break;
         case AST_ASSIGNMENT: next_value = fasm_assignment(ast, list);  break;
-        case AST_VARIABLE:   next_value = fasm_variable(ast, list);    break;
-        case AST_CALL:       next_value = fasm_call(ast, list);        break;
-        case AST_INT:        next_value = fasm_int(ast, list);         break;
-        case AST_ACCESS:     next_value = fasm_access(ast, list);      break;
+        case AST_VARIABLE:   next_value = fasm_variable  (ast, list);  break;
+        case AST_CALL:       next_value = fasm_call      (ast, list);  break;
+        case AST_INT:        next_value = fasm_int       (ast, list);  break;
+        case AST_STRING:     next_value = fasm_string    (ast, list);  break;
+        case AST_ACCESS:     next_value = fasm_access    (ast, list);  break;
 
         default: {
             printf("[FASM] :: Unexpected AST of type '%d'\n",ast->type);
@@ -173,7 +178,7 @@ char *fasm(AST *ast, List *list)
         } break;
     }
 
-    value = realloc(value, ( strlen(value) + strlen(next_value) + 256 ) * sizeof(char));
+    value = realloc(value, ( strlen(value) + strlen(next_value) + 512) * sizeof(char));
     strcat(value, next_value);
 
     return value;

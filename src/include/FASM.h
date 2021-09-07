@@ -9,6 +9,7 @@
     char *fasm_call      (AST *ast, List *list);
     char *fasm_variable  (AST *ast, List *list);
     char *fasm_int       (AST *ast, List *list);
+    char *fasm_string    (AST *ast, List *list);
     char *fasm_access    (AST *ast, List *list);
     char *fasm           (AST *ast, List *list);
     char *fasm_root      (AST *ast, List *list);
