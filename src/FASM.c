@@ -126,7 +126,6 @@ char *fasm_access(AST *ast, List *list)
 
     sprintf(s, template, left_as, (first_arg ? first_arg->intValue : 0)*4);
 
-    printf("%s",s);
     return s;
 }
 
