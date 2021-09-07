@@ -1,9 +1,8 @@
 #ifndef ASC_FASM_H
     #define ASC_FASM_H
 
+    #include "Lookup.h"
     #include "AST.h"
-
-    static AST *var_lookup(List *list, const char *name);
 
     char *fasm_compound  (AST *ast, List *list);
     char *fasm_assignment(AST *ast, List *list);

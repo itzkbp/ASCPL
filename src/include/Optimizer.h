@@ -3,8 +3,8 @@
 
     #include "AST.h"
 
-    typedef struct Optimizer{
-        int x;
+    typedef struct st_Optimizer{
+        AST *object;
     } Optimizer;
 
     Optimizer *init_optimizer();
