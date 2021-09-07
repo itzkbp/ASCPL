@@ -1,4 +1,5 @@
 #include "include/BuiltIns.h"
+#include "include/utils.h"
 
 #include "include/String.h"
 
@@ -6,6 +7,11 @@
 AST *fptr_print(Optimizer *optimizer, AST *node, List *list)
 {
     AST *ast = init_ast(AST_STRING);
+
+    AST *first_arg = list->size ? (AST *) list->items[0] : (AST *) 0;
+    char *instruc  = (char *) calloc(128, sizeof(char));
+    sprintf(instruc, "%d", first_arg->intValue);
+
     const char *template = "movl $4, \%eax\n"   //syscall write
                            "movl $1, \%ebx\n"   //stdout
                            "movl $0, \%ecx\n"   //buffer
