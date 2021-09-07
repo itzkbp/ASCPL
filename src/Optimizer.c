@@ -35,7 +35,7 @@ AST *optimizer_optimize_assignment(Optimizer *optimizer, AST *node, List *list)
 
     list_push(list, new_variable);
 
-    return node;
+    return new_variable;
 }
 
 AST *optimizer_optimize_call(Optimizer *optimizer, AST *node, List *list)
@@ -49,7 +49,7 @@ AST *optimizer_optimize_call(Optimizer *optimizer, AST *node, List *list)
     {
         if(var->fptr)
         {
-            return var->fptr(optimizer, var, node->value->children);
+            return optimizer_optimize(optimizer, var->fptr(optimizer, var, node->value->children), list);
         }
     }
 
@@ -68,15 +68,22 @@ AST *optimizer_optimize_variable(Optimizer *optimizer, AST *node, List *list)
 
 AST *optimizer_optimize_function(Optimizer *optimizer, AST *node, List *list)
 {
-    AST *compound = init_ast(AST_COMPOUND);
+    AST *function      = init_ast(AST_FUNCTION);
+    function->children = init_list(sizeof(AST *));
+    function->value    = optimizer_optimize(optimizer, node->value, list);
 
-    for(uint i = 0; i < node->value->children->size; i++)
-        list_push(compound->children, optimizer_optimize(optimizer, (AST *) node->value->children->items[i], list));
+    for(uint i = 0; i < node->children->size; i++)
+        list_push(function->children, (AST *) optimizer_optimize(optimizer, (AST *) node->children->items[i], list));
 
-    return node;
+    return function;
 }
 
 AST *optimizer_optimize_int(Optimizer *optimizer, AST *node, List *list)
+{
+    return node;
+}
+
+AST *optimizer_optimize_string(Optimizer *optimizer, AST *node, List *list)
 {
     return node;
 }
@@ -98,6 +105,7 @@ AST *optimizer_optimize(Optimizer *optimizer, AST *node, List *list)
         case AST_INT:        return optimizer_optimize_int       (optimizer, node, list); break;
         case AST_ACCESS:     return optimizer_optimize_access    (optimizer, node, list); break;
         case AST_FUNCTION:   return optimizer_optimize_function  (optimizer, node, list); break;
+        case AST_STRING:     return optimizer_optimize_string    (optimizer, node, list); break;
 
         default: {
             printf("[Optimizer] :: Unexpected AST of type '%d'\n",node->type);
