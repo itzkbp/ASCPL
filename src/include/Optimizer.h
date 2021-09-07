@@ -15,6 +15,7 @@
     AST *optimizer_optimize_variable  (Optimizer *optimizer, AST *node, List *list);
     AST *optimizer_optimize_function  (Optimizer *optimizer, AST *node, List *list);
     AST *optimizer_optimize_int       (Optimizer *optimizer, AST *node, List *list);
+    AST *optimizer_optimize_string    (Optimizer *optimizer, AST *node, List *list);
     AST *optimizer_optimize_access    (Optimizer *optimizer, AST *node, List *list);
 
     AST *optimizer_optimize(Optimizer *optimizer, AST *node, List *list);
