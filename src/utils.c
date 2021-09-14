@@ -8,7 +8,7 @@ char *str_to_hex(const char *inStr)
     for(uint i = 0; i < len; i++)
     {
         char *newStr = (char *) calloc(4, sizeof(char));
-        sprintf(newStr, "%x", inStr[i]);
+        sprintf(newStr, "%x", inStr[len-1-i]);
         strcat(hexStr, newStr);
         free(newStr);
     }

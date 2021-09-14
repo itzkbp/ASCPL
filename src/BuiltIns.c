@@ -10,15 +10,26 @@ AST *fptr_print(Optimizer *optimizer, AST *node, List *list)
 
     AST *first_arg = list->size ? (AST *) list->items[0] : (AST *) 0;
     char *instruc  = (char *) calloc(128, sizeof(char));
-    sprintf(instruc, "%d", first_arg->intValue);
+    char *hexStr = 0;
 
-    const char *template = "movl $4, \%eax\n"   //syscall write
-                           "movl $1, \%ebx\n"   //stdout
-                           "movl $0, \%ecx\n"   //buffer
-                           "movl $0, \%edx\n"   //size
+    if(first_arg)
+    {
+        sprintf(instruc, "%d", first_arg->intValue);
+        hexStr = str_to_hex(instruc);
+    }
+
+    const char *template = "movl $4, %%eax\n"   //syscall write
+                           "movl $1, %%ebx\n"   //stdout
+                           "pushl $0x%s\n"
+                           "movl %%esp, %%ecx\n"
+                           "movl $%d, %%edx\n"   //size
                            "int $0x80\n";
 
-    ast->stringValue = mkstr(template);
+    char *asmbly = (char *) calloc(strlen(template) + (hexStr ? strlen(hexStr) : 0) + 1, sizeof(char));
+    sprintf(asmbly, template, (hexStr ? hexStr : "$0"), hexStr ? strlen(hexStr) * 2: 0);
+    ast->stringValue = asmbly;
+
+    free(hexStr);
 
     return ast;
 }

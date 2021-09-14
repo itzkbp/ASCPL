@@ -13,7 +13,7 @@ char *fasm_compound(AST *ast, List *list)
     {
         AST *child_ast = (AST *) ast->children->items[i];
         char *next_value = fasm(child_ast, list);
-        value = realloc(value, (strlen(next_value) + 1) * sizeof(char) );
+        value = realloc(value, (strlen(value) + strlen(next_value) + 1) * sizeof(char) );
         strcat(value, next_value);
     }
 
