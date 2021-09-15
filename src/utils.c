@@ -15,3 +15,23 @@ char *str_to_hex(const char *inStr)
 
     return hexStr;
 }
+
+char **str_to_hex_chunks(const char *inStr, int *no_of_chunks)
+{
+    uint len = strlen(inStr);
+    uint n_chunks = (len/4) + 1; 
+    *no_of_chunks = n_chunks;
+
+    char **strlist = (char **) calloc(n_chunks * 5, sizeof(char));
+
+    for(uint i = 0; i < n_chunks; i++)
+    {
+        char *chunkstr = mkstr(inStr + (i*4));
+        chunkstr = (char *) realloc(chunkstr, 4);
+        chunkstr[4] = 0;
+
+        strlist[i] = chunkstr;
+    }
+
+    return strlist;
+}
