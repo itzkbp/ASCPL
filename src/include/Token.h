@@ -14,6 +14,7 @@
             TK_RBRACKET,
             TK_COLON,
             TK_COMMA,
+            TK_STRING,
             TK_LT,
             TK_GT,
             TK_RARROW,

@@ -9,12 +9,20 @@ AST *fptr_print(Optimizer *optimizer, AST *node, List *list)
     AST *ast = init_ast(AST_STRING);
 
     AST *first_arg = list->size ? (AST *) list->items[0] : (AST *) 0;
-    char *instruc  = (char *) calloc(128, sizeof(char));
+    char *instruc  = 0;
     char *hexStr = 0;
 
     if(first_arg)
     {
-        sprintf(instruc, "%d", first_arg->intValue);
+        if(first_arg->type == AST_STRING)
+            instruc = first_arg->stringValue;
+
+        else if(first_arg->type == AST_INT)
+        {
+            instruc = (char *) calloc(128, sizeof(char));
+            sprintf(instruc, "%d", first_arg->intValue);
+        }
+
         hexStr = str_to_hex(instruc);
     }
 

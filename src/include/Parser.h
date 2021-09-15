@@ -20,6 +20,7 @@
     AST *parser_parse_block   (Parser *parser);
     AST *parser_parse_exp     (Parser *parser);
     AST *parser_parse_int     (Parser *parser);
+    AST *parser_parse_string  (Parser *parser);
     AST *parser_parse_compound(Parser *parser);
     
 #endif

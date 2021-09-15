@@ -151,6 +151,7 @@ AST *parser_parse_exp(Parser *parser)
         case TK_ID:     return parser_parse_id(parser);
         case TK_LPAREN: return parser_parse_list(parser);
         case TK_INT:    return parser_parse_int(parser);
+        case TK_STRING: return parser_parse_string(parser);
 
         default: {
             printf("[Parser] :: Unexpected Token %s.\n", token_to_string(parser->token));
@@ -169,6 +170,18 @@ AST *parser_parse_int(Parser *parser)
 
     return ast;
 }
+
+AST *parser_parse_string(Parser *parser)
+{
+    char *value = mkstr(parser->token->value);
+    parser_eat(parser, TK_STRING);
+
+    AST *ast = init_ast(AST_STRING);
+    ast->stringValue = value;
+
+    return ast;
+}
+
 
 AST *parser_parse_compound(Parser *parser)
 {

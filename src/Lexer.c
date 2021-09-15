@@ -84,6 +84,23 @@ Token *lexer_parse_int(Lexer *lexer)
     return init_token(value, TK_INT);
 }
 
+Token *lexer_parse_string(Lexer *lexer)
+{
+    char *value = (char *) calloc(1, sizeof(char));
+    lexer_advance(lexer);
+
+    while(lexer->c != '"')
+    {
+        value = realloc(value, (strlen(value) + 2) * sizeof(char) );
+        strcat(value, (char[]){lexer->c, 0});
+        lexer_advance(lexer);
+    }
+
+    lexer_advance(lexer);
+    
+    return init_token(value, TK_STRING);
+}
+
 Token *lexer_next_token(Lexer *lexer)
 {
     while(lexer->c != '\0')
@@ -110,6 +127,7 @@ Token *lexer_next_token(Lexer *lexer)
             case ']': return lexer_advance_current(lexer, TK_RBRACKET);
             case ':': return lexer_advance_current(lexer, TK_COLON);
             case ',': return lexer_advance_current(lexer, TK_COMMA);
+            case '"': return lexer_parse_string(lexer);
             case '<': return lexer_advance_current(lexer, TK_LT);
             case '>': return lexer_advance_current(lexer, TK_GT);
             case ';': return lexer_advance_current(lexer, TK_SEMICOLON);

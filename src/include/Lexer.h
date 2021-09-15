@@ -25,5 +25,6 @@
     Token *lexer_advance_current(Lexer *lexer, int type);
     Token *lexer_parse_id       (Lexer *lexer);
     Token *lexer_parse_int      (Lexer *lexer);
+    Token *lexer_parse_string   (Lexer *lexer);
     Token *lexer_next_token     (Lexer *lexer);
 #endif
