@@ -32,7 +32,7 @@ AST *fptr_print(Optimizer *optimizer, AST *node, List *list)
 
         for(uint i = 0; i < no_of_chunks; i++)
         {
-            char *pushhex = str_to_hex(chunks[no_of_chunks-i-1]);
+            char *pushhex = chunks[no_of_chunks-i-1];
             char *push = (char *) calloc(strlen(pushhex) + strlen(pushtemplate) + 1, sizeof(char));
             sprintf(push, pushtemplate, pushhex);
             strpush = realloc(strpush, (strlen(strpush) + strlen(push) + 1)*sizeof(char));
@@ -46,11 +46,12 @@ AST *fptr_print(Optimizer *optimizer, AST *node, List *list)
                            "movl $1, %%ebx\n"   //stdout
                            "%s"
                            "movl %%esp, %%ecx\n"
+                           "addl $%d, %%esp\n"
                            "movl $%d, %%edx\n"   //size
                            "int $0x80\n";
 
     char *asmbly = (char *) calloc(strlen(template) + (hexStr ? strlen(hexStr) : 0) + 1, sizeof(char));
-    sprintf(asmbly, template, (hexStr ? hexStr : "$0"), no_of_chunks * 4);
+    sprintf(asmbly, template, (hexStr ? hexStr : "$0"), no_of_chunks * 4, no_of_chunks * 4);
     ast->stringValue = asmbly;
 
     free(hexStr);

@@ -30,7 +30,9 @@ char **str_to_hex_chunks(const char *inStr, int *no_of_chunks)
         chunkstr = (char *) realloc(chunkstr, 4);
         chunkstr[4] = 0;
 
-        strlist[i] = chunkstr;
+        char *hexStr = str_to_hex(chunkstr);
+
+        strlist[i] = hexStr;
     }
 
     return strlist;
