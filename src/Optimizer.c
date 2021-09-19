@@ -70,7 +70,7 @@ AST *optimizer_optimize_function(Optimizer *optimizer, AST *node, List *list)
 {
     AST *function      = init_ast(AST_FUNCTION);
     function->children = init_list(sizeof(AST *));
-    function->value    = optimizer_optimize(optimizer, node->value, list);
+    function->value    = optimizer_optimize(optimizer, node->value, node->children);
 
     for(uint i = 0; i < node->children->size; i++)
         list_push(function->children, (AST *) optimizer_optimize(optimizer, (AST *) node->children->items[i], list));

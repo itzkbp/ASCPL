@@ -1,39 +1,78 @@
 #include "include/utils.h"
+#include "include/MACROS.h"
 
 char *str_to_hex(const char *inStr)
 {
-    uint len     = strlen(inStr);
-    char *hexStr = (char *) calloc(len * 4, sizeof(char));
-
-    for(uint i = 0; i < len; i++)
-    {
-        char *newStr = (char *) calloc(4, sizeof(char));
-        sprintf(newStr, "%x", inStr[len-1-i]);
-        strcat(hexStr, newStr);
-        free(newStr);
-    }
-
-    return hexStr;
+    char *hexStr = (char *) calloc(2, sizeof(char));
+    sprintf(hexStr, "%x", inStr[0]);
+    return mkstr(hexStr);
 }
 
-char **str_to_hex_chunks(const char *inStr, int *no_of_chunks)
+List *str_to_hex_chunks(const char *inStr)
 {
-    uint len = strlen(inStr);
-    uint n_chunks = (len/4) + 1; 
-    *no_of_chunks = n_chunks;
+    List *list = init_list(sizeof(char *));
 
-    char **strlist = (char **) calloc(n_chunks * 5, sizeof(char));
+    uint i = 0;
 
-    for(uint i = 0; i < n_chunks; i++)
+    //char *temp = (char *) calloc(5, sizeof(char));
+    while(inStr[i] != '\0')
     {
-        char *chunkstr = mkstr(inStr + (i*4));
-        chunkstr = (char *) realloc(chunkstr, 4);
-        chunkstr[4] = 0;
-
-        char *hexStr = str_to_hex(chunkstr);
-
-        strlist[i] = hexStr;
+        list_push(list, str_to_hex((char[]){inStr[i], 0}));
+        i++;
     }
 
-    return strlist;
+    return list;
+}
+
+char *str_format(const char *inStr)
+{
+    char *newStr = (char *) calloc(1, sizeof(char));
+    uint len = strlen(inStr);
+    uint i = 0;
+
+    while(inStr[i] != '\0' && i < len)
+    {
+        newStr = realloc(newStr, (strlen(newStr) + 2) * sizeof(char));
+
+        if(inStr[i] == '\\')
+        {
+            char *escape = str_to_escapeSequence((char[]){'//', inStr[MIN(i+1, len)], '\0'});
+            strcat(newStr, (char[]){escape, '\0'});
+            i += 2;
+        }
+        else
+        {
+            strcat(newStr, (char[]){inStr[i], 0});
+            i += 1;
+        }
+    }
+
+    return newStr;
+}
+
+char str_to_escapeSequence(const char *inStr)
+{
+    if(strlen(inStr) <= 1)
+        return 0;
+    if(inStr[0] == '\\')
+        return 0;
+
+    char in_c = inStr[1];
+
+    switch(in_c)
+    {
+        case 'n':
+            return '\n';
+            break;
+        case 't':
+            return '\t';
+            break;
+        case '\\':
+            return in_c;
+            break;
+        default:
+            return in_c;
+            break;
+    }
+    return in_c;
 }

@@ -8,35 +8,35 @@ AST *fptr_print(Optimizer *optimizer, AST *node, List *list)
 {
     AST *ast = init_ast(AST_STRING);
 
-    AST *first_arg = list->size ? (AST *) list->items[0] : (AST *) 0;
-    char *instruc  = 0;
+    AST *first_arg = list->size ? (AST *) optimizer_optimize(optimizer, list->items[0], list) : (AST *) 0;
+    char *instruc  = first_arg ? first_arg->stringValue : 0;
     char *hexStr = 0;
 
     int no_of_chunks = 0;
 
     if(first_arg)
     {
-        if(first_arg->type == AST_STRING)
-            instruc = first_arg->stringValue;
-
-        else if(first_arg->type == AST_INT)
+        if(first_arg->type == AST_INT)
         {
             instruc = (char *) calloc(128, sizeof(char));
             sprintf(instruc, "%d", first_arg->intValue);
         }
 
-        char **chunks = str_to_hex_chunks(instruc, &no_of_chunks);
+        List *list = str_to_hex_chunks(instruc);
+        no_of_chunks = (int) list->size;
 
         char *strpush = (char *) calloc(1, sizeof(char));
         const char *pushtemplate = "pushl $0x%s\n";
 
-        for(uint i = 0; i < no_of_chunks; i++)
+        for(int i = 0; i < no_of_chunks; i++)
         {
-            char *pushhex = chunks[no_of_chunks-i-1];
+            char *pushhex = (char *) list->items[no_of_chunks-i-1];
             char *push = (char *) calloc(strlen(pushhex) + strlen(pushtemplate) + 1, sizeof(char));
             sprintf(push, pushtemplate, pushhex);
             strpush = realloc(strpush, (strlen(strpush) + strlen(push) + 1)*sizeof(char));
             strcat(strpush, push);
+            free(pushhex);
+            free(push);
         }
 
         hexStr = strpush;
