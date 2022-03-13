@@ -1,5 +1,5 @@
 COMPILER  = gcc
-TOCOMPILE = *.c
+TOCOMPILE = src/*.c
 OUTFILE   = asc
 ARGUMENT = ./examples/ex-4.asc
 
